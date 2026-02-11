@@ -6,5 +6,6 @@ export const roleMiddleware=(...roleAllowed)=>{
                 message:"Access Denied"
             })
         }
+        next();
     }
 }
