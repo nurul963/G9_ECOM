@@ -26,11 +26,13 @@ export const deleteUser=async(req,resp)=>{
 }
 export const loginUser=async(req,resp)=>{
     const result=await loginUserService(req.body);
-    resp.cookie('token',result.result.token,{
-        httpOnly:true,
-        secure:false,
-        samesite:'strict'
-    })
+    if(result.result && result.result.token){
+        resp.cookie('token',result.result.token,{
+            httpOnly:true,
+            secure:false,
+            samesite:'strict'
+        })
+    }
     return resp.status(result.statusCode).json({
         result
     }) 

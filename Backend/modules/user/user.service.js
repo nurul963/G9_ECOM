@@ -4,6 +4,14 @@ import jwt from 'jsonwebtoken';
 import { SECERATE_KEY } from "../../util/constant.js";
 export const addUserService=async(data)=>{
     try {
+        const {role}=data;
+        if(role==="ADMIN"){
+            data.isActive=1;
+        }else if(role==="SELLER"){
+            //send mail to admin
+        }else{
+            //email verification for user using OTP
+        }
         const result=await User.create(data);
         return {statusCode:201,result}
     } catch (error) {
@@ -69,6 +77,12 @@ export const loginUserService=async(data)=>{
             return {
                 statusCode:400,
                 message:"Invalid Credential"
+            }
+        }
+        if(!user.isActive){
+            return {
+                statusCode:400,
+                message:`${user.name} has been blocked please contact to Admin`
             }
         }
         const id=user.id.toString();
