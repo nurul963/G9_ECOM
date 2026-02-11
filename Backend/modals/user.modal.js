@@ -1,5 +1,5 @@
 import { DataTypes } from "sequelize";
-
+import bcrypt from 'bcrypt';
 const UserModal=(sequelize)=>{
     return sequelize.define('user',{
         name:{
@@ -13,7 +13,11 @@ const UserModal=(sequelize)=>{
         },
         password:{
             type:DataTypes.STRING,
-            allowNull:false
+            allowNull:false,
+            set(value){
+                const hashPassword=bcrypt.hashSync(value,10);
+                this.setDataValue('password', hashPassword);
+            }
         },
         role:{
             type:DataTypes.ENUM('ADMIN','USER','SELLER'),

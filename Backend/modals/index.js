@@ -23,6 +23,43 @@ const Payment=paymentModal(sequelize);
 const ProductImage=productImageModal(sequelize);
 const Review=reviewModal(sequelize);
 const Wishlist=wishlistModal(sequelize);
+//Association
+Category.hasMany(Product);
+Product.belongsTo(Category);
+
+Product.hasMany(ProductImage);
+ProductImage.belongsTo(Product);
+
+User.hasMany(Address);
+Address.belongsTo(User);
+
+User.hasMany(Cart);
+Cart.belongsTo(User);
+Product.hasMany(Cart);
+Cart.belongsTo(Product);
+
+User.hasMany(Wishlist);
+Wishlist.belongsTo(User);
+Product.hasMany(Wishlist);
+Wishlist.belongsTo(Product);
+
+User.hasMany(Order);
+Order.belongsTo(User);
+
+Order.hasMany(OrderItem);
+OrderItem.belongsTo(Order);
+Product.hasMany(OrderItem);
+OrderItem.belongsTo(Product);
+
+Order.hasOne(Payment);
+Payment.belongsTo(Order);
+
+User.hasMany(Review);
+Review.belongsTo(User);
+Product.hasMany(Review);
+Review.belongsTo(Product);
+
+
 export {
     User,
     Product,
