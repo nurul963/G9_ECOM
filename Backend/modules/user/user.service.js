@@ -1,18 +1,46 @@
 import { User } from "../../modals/index.js"
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { SECERATE_KEY } from "../../util/constant.js";
+import { GMAIL_ID, SECERATE_KEY } from "../../util/constant.js";
+import { sendMail } from "../../util/common.js";
 export const addUserService=async(data)=>{
+    let result;
     try {
-        const {role}=data;
+        const {role,email}=data;
         if(role==="ADMIN"){
             data.isActive=1;
+            result=await User.create(data);
         }else if(role==="SELLER"){
             //send mail to admin
+            result=await User.create(data);
+            const sellerText=`
+            Your account is created but it is pending for verification, Please contact to admin 
+            username:${email}
+            `;
+            const sellerSubject='Account Created'
+            const info=await sendMail(sellerText,email,sellerSubject);
+            if(info.messageId){
+                const adminText=`
+                One new Account is created please Activate
+                userName:${email},
+                Name:${data.name},
+                Role:${role}
+                `;
+                const adminSubject='ACTIVATE ACCOUT'
+                const infoAdmin=await sendMail(adminText,GMAIL_ID,adminSubject);
+                if(infoAdmin.messageId){
+                    return {
+                        statusCode:200,
+                        message:"Account is Pending for Verification from Admin side"
+                    }
+                }
+                
+            }
         }else{
             //email verification for user using OTP
+            result=await User.create(data);
         }
-        const result=await User.create(data);
+        
         return {statusCode:201,result}
     } catch (error) {
         return {statusCode:400,message:error.message}
@@ -85,6 +113,7 @@ export const loginUserService=async(data)=>{
                 message:`${user.name} has been blocked please contact to Admin`
             }
         }
+
         const id=user.id.toString();
         const role=user.role;
         const name=user.name;
