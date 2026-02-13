@@ -1,0 +1,11 @@
+import express from 'express';
+import { categoryController } from './category.controller.js';
+import {isAuthenticate} from '../auth/isAuthenticate.js';
+import {roleMiddleware} from '../../middleware/roleMiddleware.js';
+const router=express.Router();
+router.post("/",isAuthenticate,roleMiddleware('ADMIN','SELLER'),categoryController.addCategory);
+router.get("/",isAuthenticate,categoryController.getCategory);
+router.get("/:id",isAuthenticate,categoryController.getCategoryById);
+router.put("/:id",isAuthenticate,roleMiddleware('ADMIN','SELLER'),categoryController.updateCategory);
+router.delete("/:id",isAuthenticate,roleMiddleware('ADMIN','SELLER'),categoryController.deleteCategory);
+export default router;
