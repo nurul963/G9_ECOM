@@ -9,3 +9,6 @@ export const DILECT=process.env.DILECT;
 export const SECERATE_KEY=process.env.SECERATE_KEY;
 export const GOOGLE_APP_PASSWORD=process.env.GOOGLE_APP_PASSWORD;
 export const GMAIL_ID=process.env.GMAIL_ID;
+export const CLOUDINARY_NAME=process.env.CLOUDINARY_NAME;
+export const CLOUDINARY_API_KEY=process.env.CLOUDINARY_API_KEY;
+export const CLOUDINARY_API_SECERATE=process.env.CLOUDINARY_API_SECERATE;

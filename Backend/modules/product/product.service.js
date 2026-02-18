@@ -1,20 +1,37 @@
 import { Category, Product, ProductImage } from "../../modals/index.js";
 import {response} from '../../util/response.js';
-const addProduct=async(data)=>{
-    let result;
+import { uploadImages } from "../../config/cloudinary.js";
+const addProduct=async(files,data)=>{
     try {
-        if(data.length > 1){
-            result=await Product.bulkCreate(data,{
-                include:[Category,ProductImage]
+        const product=await Product.create(data);
+        const uploadImage=[];
+        for(let file of files){
+            const result=await uploadImages(file);
+            // console.log(result);
+            uploadImage.push({
+                imageUrl:result.secure_url,
+                publicId:result.public_id,
+                productId:product.id
             })
-        }else{
-            result=await Product.create(data,{
-                include:[Category,ProductImage]
-            })
+            if(uploadImage.length === files.length)
+                await ProductImage.bulkCreate(uploadImage);
         }
         return response(201,"Product Added Successfully")
     } catch (error) {
-        return response(500,"INTERNAL_SERVER_ERROR");
+        return response(500,error.message);
     }
 }
-export const productService={addProduct};
+const getAllProduct=async()=>{
+    try {
+        const result=await Product.findAll({
+            include:{model:Category,model:ProductImage}
+        });
+        return response(201,"Product Fetched Successfully",result)
+    } catch (error) {
+        return response(500,error.message);
+    }
+}
+export const productService={
+    addProduct,
+    getAllProduct
+};

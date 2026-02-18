@@ -1,7 +1,7 @@
-export const response=async(statusCode,msg,data)=>{
+export const response=async(statusCode,msg,data=null)=>{
     return {
         statusCode,
         message:msg,
-        result:data || null
+        result:data
     }
 }
