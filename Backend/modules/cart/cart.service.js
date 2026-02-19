@@ -26,8 +26,6 @@ const addToCart=async(data)=>{
             exsisting.quantity+=quantity;
             await exsisting.save();
         }
-        product.stock-=quantity;
-        await product.save();
         return response(201,"Product Added to cart",result);
 
     } catch (error) {
