@@ -1,9 +1,9 @@
 import { Product ,Cart} from "../../modals/index.js";
 import { response } from "../../util/response.js"
 
-const addToCart=async(data)=>{
+const addToCart=async(userId,data)=>{
     try {
-        const {userId,quantity,productId}=data;
+        const {quantity,productId}=data;
         const product=await Product.findOne({where:{id:productId}});
         if(!product){
             return response(400,"Product Not Found");
@@ -33,4 +33,34 @@ const addToCart=async(data)=>{
     }
     
 }
-export const cartService={addToCart}
+const getAllCart=async()=>{
+    try {
+        const carts=await Cart.findAll();
+        return response(200,"Cart List",carts);
+    } catch (error) {
+        return response(400,error.message);
+    }
+}
+const getCartByUserId=async(userId)=>{
+    try {
+        const carts=await Cart.findAll({where:{userId}});
+        return response(200,"Cart List",carts);
+    } catch (error) {
+        return response(400,error.message);
+    }
+}
+const getCartByProductId=async(productId)=>{
+    try {
+        const carts=await Cart.findAll({where:{productId}});
+        return response(200,"Cart List",carts);
+    } catch (error) {
+        return response(400,error.message);
+    }
+}
+export const cartService=
+{
+    addToCart,
+    getAllCart,
+    getCartByUserId,
+    getCartByProductId
+}

@@ -1,6 +1,10 @@
 import express from 'express';
 import { isAuthenticate } from '../auth/isAuthenticate.js';
+import {roleMiddleware} from '../../middleware/roleMiddleware.js';
 import { orderController } from './order.controller.js';
 const router=express.Router();
 router.post("/",isAuthenticate,orderController.createOrder);
+router.get("/",isAuthenticate,roleMiddleware('ADMIN'),orderController.getAllOrder);
+router.get("/:id",isAuthenticate,roleMiddleware('ADMIN','SELLER'),orderController.getOrderByUserId);
+router.get("/status",isAuthenticate,roleMiddleware('ADMIN','SELLER'),orderController.getOrderByStatus);
 export default router;
