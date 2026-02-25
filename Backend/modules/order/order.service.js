@@ -6,6 +6,9 @@ const createOrder=async(userId)=>{
             where:{userId},
             include:Product
         });
+        if(cartItems.length===0){
+            return response(400,"Cart is empty");
+        }
         let totalAmount=0;
         const order=await Order.create({
             totalAmount,
